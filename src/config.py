@@ -1,1 +1,0 @@
-SYNC_INTERVAL = 10
