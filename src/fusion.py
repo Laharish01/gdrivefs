@@ -14,9 +14,6 @@ class Passthrough(Operations):
         self.root = root
         self.fm = fileMethods()
 
-    # Helpers
-    # =======
-
     def _full_path(self, partial):
         if partial.startswith("/"):
             partial = partial[1:]
@@ -29,8 +26,6 @@ class Passthrough(Operations):
             return '/'
         return parent
 
-    # Filesystem methods
-    # ==================
 
     def access(self, path, mode):
         full_path = self._full_path(path)
@@ -62,7 +57,6 @@ class Passthrough(Operations):
         parent_path = self._parent_path(path)
         dirents = ['.', '..']
         print("ls :", path)
-        # self.fm.sync_threaded(path, full_path, parent_path)
         if os.path.isdir(full_path):
             dirents.extend(os.listdir(full_path))
         for r in dirents:
@@ -71,7 +65,6 @@ class Passthrough(Operations):
     def readlink(self, path):
         pathname = os.readlink(self._full_path(path))
         if pathname.startswith("/"):
-            # Path name is absolute, sanitize it.
             return os.path.relpath(pathname, self.root)
         else:
             return pathname
@@ -129,8 +122,6 @@ class Passthrough(Operations):
     def utimens(self, path, times=None):
         return os.utime(self._full_path(path), times)
 
-    # File methods
-    # ============
 
     def open(self, path, flags):
         print('open :',path)
@@ -163,15 +154,12 @@ class Passthrough(Operations):
             f.truncate(length)
 
     def flush(self, path, fh):
-        # print('flush :',path)
         return os.fsync(fh)
 
     def release(self, path, fh):
-        # print('release :',path)
         return os.close(fh)
 
     def fsync(self, path, fdatasync, fh):
-        # print('fsync :',path,fdatasync)
         return self.flush(path, fh)
 
 

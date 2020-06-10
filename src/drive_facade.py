@@ -12,7 +12,6 @@ import time
 
 class driveFacade:
     def __init__(self):
-        # If modifying these scopes, delete the file token.pickle.
         self.SCOPES = ['https://www.googleapis.com/auth/drive']
         self.service = None
         self.creds = None
@@ -46,13 +45,10 @@ class driveFacade:
 
     def authenticate(self):
         # creds = None
-        # The file token.pickle stores the user's access and refresh tokens, and is
-        # created automatically when the authorization flow completes for the first
-        # time.
+
         if os.path.exists('src/token.pickle'):
             with open('src/token.pickle', 'rb') as token:
                 self.creds = pickle.load(token)
-        # If there are no (valid) credentials available, let the user log in.
         if not self.creds or not self.creds.valid:
             if self.creds and self.creds.expired and self.creds.refresh_token:
                 self.creds.refresh(Request())
@@ -60,7 +56,6 @@ class driveFacade:
                 flow = InstalledAppFlow.from_client_secrets_file(
                     'src/credentials.json', self.SCOPES)
                 self.creds = flow.run_local_server(port=0)
-            # Save the credentials for the next run
             with open('src/token.pickle', 'wb') as token:
                 pickle.dump(self.creds, token)
         print(self.creds)
@@ -229,32 +224,9 @@ def main():
     df = driveFacade()
 
     df.authenticate()
-    # items = df.get_files_metadata(12)
 
-    # if not items:
-    #     print('No files found.')
-    # else:
-    #     print('Files:')
-    #     for item in items:
-    #         print(u'{0} ({1})'.format(item['name'], item['id']))
-
-    # df.get_file_content(items[3]['id'],'img.jpg',True)
-    # items = df.get_all_files('1OfrcYqyTHEzQ0jHVAIfYe5TCZHsbrIkH')
-    # # print(df.create_folder('man','14eyVbUtI29O0224U9NCD7SOQ2-xLpVYn'))
-    # start = time.time()
-    # df.downloader(path = './root',items = items,verbose = True)
-    # end = time.time()
-    # print(end-start)
-    # print(items)
-    # df.downloader('./root',items)
-    # id = df.create_file('root','a')
     items = df.get_all_files()
     print(items[0])
-    # file = df.update_file('1bOqO7NBDNRezzAN5Y9C2GaaA81qxT_oN',source='src/root/another/hello.txt')
-    # print(file)
-    # df.delete_file('1sA37GZE_NeyJkv7_8GMfZcFPPfwm2YbP')
-    
-            
 
 if __name__ == '__main__':
     main()
